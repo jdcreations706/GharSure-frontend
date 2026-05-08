@@ -206,10 +206,10 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
   <h1>Know before<br>you <span>sign</span></h1>
   <p>AI-powered property health score — valuation, builder reputation, legal status, and real negotiation advice. Free, instant, independent.</p>
   <div class="trust-pills">
-    <div class="trust-pill">🔒 Not sold to brokers</div>
-    <div class="trust-pill">⚡ Results in ~30 sec</div>
-    <div class="trust-pill">🏗 Architect-backed</div>
-    <div class="trust-pill">₹0 always free</div>
+    <div class="trust-pill">🛡 Detect overpriced properties instantly</div>
+    <div class="trust-pill">⚡ AI report in under 30 seconds</div>
+    <div class="trust-pill">🏗 Reviewed with architect intelligence</div>
+    <div class="trust-pill">📈 Builder, resale & risk analysis</div>
   </div>
 </div>
 
@@ -308,7 +308,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 
       <div class="popup-what">
         <div class="popup-what-title">What you get</div>
-        <div class="popup-item"><span class="popup-item-icon">📞</span><span>20-minute call with a licensed architect (B.Arch, GGSIP University)</span></div>
+        <div class="popup-item"><span class="popup-item-icon">📞</span><span>20-minute call with a licensed architect by COA India</span></div>
         <div class="popup-item"><span class="popup-item-icon">🗺</span><span>Floor plan analysis — vastu, ventilation, space efficiency, red flags</span></div>
         <div class="popup-item"><span class="popup-item-icon">🏢</span><span>Builder-specific advice based on professional knowledge</span></div>
         <div class="popup-item"><span class="popup-item-icon">💬</span><span>Personalised negotiation script with exact rupee amounts</span></div>
@@ -338,7 +338,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 </div>
 
 <script>
-const BACKEND = "";
+const BACKEND = "https://gharsure-backend.onrender.com";
 const WA = "917065566312";
 // ─────────────────────────────────────────────────────────────────────────────
 // IMPORTANT: Replace with your real Razorpay Key ID from razorpay.com dashboard
@@ -520,7 +520,15 @@ async function runAnalysis() {
   },320);
 
   try {
-    const res=await fetch(BACKEND+"/ai-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({price,builder,city,locality,carpet,sba,status})});
+    const res=await fetch(BACKEND+"/ai-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+      price,
+      builder,
+      city,
+      location: locality,
+      carpetArea: carpet,
+      superArea: sba,
+      status
+    })});
     clearInterval(iv);
     steps.forEach(id=>{const el=document.getElementById(id);el.classList.add("done");el.querySelector(".proc-icon").textContent="✓";});
     if(!res.ok){const e=await res.json();alert(e.error||"Server error.");return;}
@@ -535,7 +543,7 @@ async function runAnalysis() {
   } catch(err){
     clearInterval(iv);
     document.getElementById("loading").classList.remove("show");
-    alert("Cannot reach server. Please try again.");
+    alert("Cannot reach GharSure server. The backend may be waking up on Render. Please wait 30-60 seconds and try again.");
   } finally {
     btn.disabled=false; btn.textContent="Analyze this property →";
   }
